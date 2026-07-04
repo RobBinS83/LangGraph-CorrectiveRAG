@@ -1,4 +1,5 @@
-from typing import List, TypedDict
+from typing import List, TypedDict, Any
+from langchain_core.documents import Document
 
 class AgentState(TypedDict):
     """
@@ -8,10 +9,10 @@ class AgentState(TypedDict):
         question: question
         generation: LLM generation
         web_search: whether to add serach
-        documents: list of documents
+        documents: list of Documents
     """
 
     question: str
     generation: str
     web_search: bool
-    documents: List[str]
+    documents: List[Document]
