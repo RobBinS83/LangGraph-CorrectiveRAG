@@ -1,5 +1,6 @@
-from typing import List, TypedDict, Any
+from typing import List, TypedDict, Any, Annotated
 from langchain_core.documents import Document
+import operator
 
 class AgentState(TypedDict):
     """
@@ -15,4 +16,4 @@ class AgentState(TypedDict):
     question: str
     generation: str
     web_search: bool
-    documents: List[Document]
+    documents: Annotated[List[Document], operator.add]
