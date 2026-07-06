@@ -11,7 +11,7 @@ def decide_to_generate(state: AgentState):
     
     print("---ASSESS GRADED DOCUMENTS---")
     if state["web_search"]:
-        print("---DECISION: NOT ALL DOCUMENTS ARE RELEVANT TO QUESTION---")
+        print("---DECISION: NOT ALL DOCUMENTS ARE RELEVANT TO QUESTION, INCLUDE WEB SEARCH---")
         return WEB_SEARCH
     else:
         print("---DECISION: GENERATE---")
