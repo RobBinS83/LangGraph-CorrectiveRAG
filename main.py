@@ -2,9 +2,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-def main():
-    print("Hello from Corrective-RAG!")
-
+from graph.graph import workflow
 
 if __name__ == "__main__":
-    main()
+    print("Hello from Corrective-RAG!")
+    print(workflow.invoke(input={"question": "what is agent memory?"}))
