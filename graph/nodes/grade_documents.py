@@ -1,7 +1,7 @@
-from typing import Any, Dict
+from typing import Any, Dict, cast
 
 from graph.state import AgentState
-from graph.chains.retrieval_grader import retrieval_grader
+from graph.chains.retrieval_grader import retrieval_grader, GradeDocuments
 
 def grade_documents(state: AgentState) -> Dict[str, Any]:
     """
@@ -22,9 +22,11 @@ def grade_documents(state: AgentState) -> Dict[str, Any]:
     filtered_docs = []
     web_search = False
     for doc in documents:
-        score = retrieval_grader.invoke(
-            {"question": question, "document": doc.page_content}
-        )
+        score = cast(
+            GradeDocuments,
+            retrieval_grader.invoke(
+                {"question": question, "document": doc.page_content})
+                )
         grade = score.binary_score
         if grade.lower() == "yes":
             print("---GRADE: DOCUMENT RELEVANT---")
