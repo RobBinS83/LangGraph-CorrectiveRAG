@@ -60,7 +60,7 @@ def test_hallucination_grader_answer_no() -> None:
     question = "agent memory"
     docs = retriever.invoke(question)
 
-    generation = generation_chain.invoke({"context": docs, "question": question})
+    #generation = generation_chain.invoke({"context": docs, "question": question})
     res: GradeHallucinations = hallucination_grader.invoke(
         {
             "documents": docs, 
