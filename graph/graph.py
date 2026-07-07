@@ -6,6 +6,7 @@ from graph.nodes import retrieve, generate, grade_documents, web_search
 from graph.state import AgentState
 from graph.chains.answer_grader import answer_grader
 from graph.chains.hallucination_grader import hallucination_grader
+from graph.chains.router import question_router, RouteQuery
 
 load_dotenv()
 
@@ -44,6 +45,19 @@ def grade_generation_grounded_in_documents_and_question(state: AgentState) -> st
     else:
         print("---DECISION: GENERAION IS NOT GROUNDED IN DOCUMENTS, REGENERATE AGAIN---")
         return "not supported"
+    
+def route_question(state: AgentState) -> str:
+    print("---ROUTE QUESTION---")
+    question = state["question"]
+    source: RouteQuery = question_router.invoke({"question": question})
+
+    if source.data_source == WEB_SEARCH:
+        print("---ROUTE QUESTION TO WEB SEARCH---")
+        return WEB_SEARCH
+    elif source.data_source == "vector_store":
+        print("---ROUTE QUESTION TO RAG---")
+        return RETRIEVE
+
 
 builder = StateGraph(AgentState)
 
@@ -52,7 +66,16 @@ builder.add_node(GRADE_DOCUMENTS, grade_documents)
 builder.add_node(GENERATE, generate)
 builder.add_node(WEB_SEARCH, web_search)
 
-builder.set_entry_point(RETRIEVE)
+#builder.set_entry_point(RETRIEVE)
+
+builder.set_conditional_entry_point(
+    route_question,
+    path_map={
+        WEB_SEARCH: WEB_SEARCH,
+        RETRIEVE: RETRIEVE,
+    }
+)
+
 builder.add_edge(RETRIEVE, GRADE_DOCUMENTS)
 
 builder.add_conditional_edges(GRADE_DOCUMENTS, 
@@ -78,5 +101,5 @@ builder.add_edge(WEB_SEARCH, GENERATE)
 
 workflow = builder.compile()
 
-workflow.get_graph().draw_mermaid_png(output_file_path="graph2.png")
+workflow.get_graph().draw_mermaid_png(output_file_path="graph3.png")
 

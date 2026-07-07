@@ -8,6 +8,7 @@ from graph.chains.retrieval_grader import GradeDocuments, retrieval_grader
 from ingestion import retriever
 from graph.chains.generation import generation_chain
 from graph.chains.hallucination_grader import hallucination_grader, GradeHallucinations
+from graph.chains.router import question_router, RouteQuery
 
 
 
@@ -68,3 +69,13 @@ def test_hallucination_grader_answer_no() -> None:
         }
     )
     assert res.binary_score == 'no'
+
+def test_router_to_vector_store() -> None:
+    question = "agent memory"
+    res: RouteQuery = question_router.invoke({"question": question})
+    assert res.data_source == "vector_store"
+
+def test_router_to_web_search() -> None:
+    question = "how to make pizza?"
+    res: RouteQuery = question_router.invoke({"question": question})
+    assert res.data_source == "web_search"
