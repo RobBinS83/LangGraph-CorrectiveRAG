@@ -17,7 +17,7 @@ def web_search(state: AgentState) -> Dict[str, Any]:
 
     tavily_results = web_search_tool.invoke({"query": question})
     results = tavily_results.get("results", [])
-    joined_tavily_results = "\n".join(
+    joined_tavily_results = "\n\n".join(
         [res.get("content", "") for res in results]
     )
 

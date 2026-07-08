@@ -37,6 +37,5 @@ def grade_documents(state: AgentState) -> Dict[str, Any]:
                 web_search = True
             continue
 
-    # TODO: these filtered_docs will be append to documents
     return {"documents": filtered_docs, "web_search": web_search, "question": question}
         
