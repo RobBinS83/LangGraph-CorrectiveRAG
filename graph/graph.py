@@ -101,5 +101,6 @@ builder.add_edge(WEB_SEARCH, GENERATE)
 
 workflow = builder.compile()
 
-workflow.get_graph().draw_mermaid_png(output_file_path="graph3.png")
+if __name__ == "__main__":
+    workflow.get_graph().draw_mermaid_png(output_file_path="graph3.png")
 

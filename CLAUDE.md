@@ -47,4 +47,4 @@ Node/edge name constants live in [graph/consts.py](graph/consts.py) (`RETRIEVE`,
 
 The vector store (`ingestion.py`) is a persistent local Chroma DB at `./.chroma`, collection `rag-chroma`, seeded from three Lilian Weng blog posts (agents, prompt engineering, adversarial attacks on LLMs) chunked with `RecursiveCharacterTextSplitter` (chunk_size=250). Because the vector store only covers those topics, the router's system prompt explicitly scopes `vector_store` to agents/prompt-engineering/adversarial-attack questions and sends everything else to `web_search`.
 
-Running `graph/graph.py` (e.g. via `uv run main.py`, which imports it) regenerates `graph3.png`, a Mermaid diagram of the compiled graph, as a side effect of module import.
+Running `graph/graph.py` directly (`uv run graph/graph.py`) regenerates `graph3.png`, a Mermaid diagram of the compiled graph; this is guarded by `if __name__ == "__main__":` so importing `workflow` elsewhere (e.g. `main.py`, tests) does not trigger it.
