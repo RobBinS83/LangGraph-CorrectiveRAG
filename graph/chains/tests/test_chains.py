@@ -9,6 +9,7 @@ from ingestion import retriever
 from graph.chains.generation import generation_chain
 from graph.chains.hallucination_grader import hallucination_grader, GradeHallucinations
 from graph.chains.router import question_router, RouteQuery
+from graph.chains.answer_grader import answer_grader, GradeAnswer
 
 
 
@@ -79,3 +80,27 @@ def test_router_to_web_search() -> None:
     question = "how to make pizza?"
     res: RouteQuery = question_router.invoke({"question": question})
     assert res.data_source == "web_search"
+
+def test_answer_grader_answer_yes() -> None:
+    question = "agent memory"
+    docs = retriever.invoke(question)
+
+    generation = generation_chain.invoke({"context": docs, "question": question})
+    res: GradeAnswer = cast(
+        GradeAnswer,
+        answer_grader.invoke({"question": question, "generation": generation}),
+    )
+    assert res.binary_score == "yes"
+
+def test_answer_grader_answer_no() -> None:
+    question = "What are the different types of agent memory?"
+    res: GradeAnswer = cast(
+        GradeAnswer,
+        answer_grader.invoke(
+            {
+                "question": question,
+                "generation": "In order to make pizza, we need to first start with the dough.",
+            }
+        ),
+    )
+    assert res.binary_score == "no"
