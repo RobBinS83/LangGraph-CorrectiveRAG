@@ -73,12 +73,18 @@ def test_hallucination_grader_answer_no() -> None:
 
 def test_router_to_vector_store() -> None:
     question = "agent memory"
-    res: RouteQuery = question_router.invoke({"question": question})
+    res: RouteQuery = cast(
+        RouteQuery,
+        question_router.invoke({"question": question})
+    )
     assert res.data_source == "vector_store"
 
 def test_router_to_web_search() -> None:
     question = "how to make pizza?"
-    res: RouteQuery = question_router.invoke({"question": question})
+    res: RouteQuery = cast(
+        RouteQuery,
+        question_router.invoke({"question": question})
+    )
     assert res.data_source == "web_search"
 
 def test_answer_grader_answer_yes() -> None:
