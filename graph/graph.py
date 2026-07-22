@@ -1,4 +1,5 @@
 from dotenv import load_dotenv
+from typing import cast
 from langgraph.graph import END, StateGraph
 
 from graph.consts import RETRIEVE, GENERATE, GRADE_DOCUMENTS, WEB_SEARCH
@@ -49,7 +50,10 @@ def grade_generation_grounded_in_documents_and_question(state: AgentState) -> st
 def route_question(state: AgentState) -> str:
     print("---ROUTE QUESTION---")
     question = state["question"]
-    source: RouteQuery = question_router.invoke({"question": question})
+    source: RouteQuery = cast(
+        RouteQuery,
+        question_router.invoke({"question": question})
+    )
 
     if source.data_source == WEB_SEARCH:
         print("---ROUTE QUESTION TO WEB SEARCH---")
@@ -57,6 +61,8 @@ def route_question(state: AgentState) -> str:
     elif source.data_source == "vector_store":
         print("---ROUTE QUESTION TO RAG---")
         return RETRIEVE
+    else:
+        raise ValueError(f"Unexpected data_source from router: {source.data_source!r}")
 
 
 builder = StateGraph(AgentState)
