@@ -8,11 +8,12 @@ load_dotenv()
 from graph.graph import workflow
 
 def _format_sources(context_docs: List[Any]) -> List[str]:
-    return [
+    sources = [
         str((meta.get("source") or "Unknown"))
         for doc in (context_docs or [])
         if (meta:= (getattr(doc, "metadata", None) or {})) is not None
     ]
+    return list(dict.fromkeys(sources))
 
 st.set_page_config(page_title="LangGraph Documentation Helper", layout="centered")
 st.title("LangGraph Documentation Helper")
